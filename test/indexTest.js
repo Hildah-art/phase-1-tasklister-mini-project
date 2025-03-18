@@ -37,21 +37,40 @@ global.XMLHttpRequest = dom.window.XMLHttpRequest;
 
 // Sample test suite for JavaScript event handling
 describe('Handling form submission', () => {
-  let form
-  let formInput
-  let taskList
+  let form;
+  let formInput;
+  let taskList;
 
   before(() => {
-    form = document.querySelector('#create-task-form')
-    formInput = document.querySelector('#new-task-description')
-    taskList = document.querySelector('#tasks')
-  })
+    global.document = dom.window.document;
+    global.window = dom.window;
+  
+    // Manually execute the script to attach event listeners
+    require('../src/index.js');  // Adjust the path if necessary
+  
+    // Manually trigger DOMContentLoaded
+    const event = new dom.window.document.defaultView.Event('DOMContentLoaded', { bubbles: true, cancelable: true });
+    document.dispatchEvent(event);
+  
+    form = document.querySelector('#create-task-form');
+    formInput = document.querySelector('#new-task-description');
+    taskList = document.querySelector('#tasks');
+  });
+  
 
-  it('should add an event to the form and add input to webpage', () => {
-    // Simulate user input
-    formInput.value = 'Wash the dishes'
-    const event = new dom.window.Event('submit')
-    form.dispatchEvent(event)
-    expect(taskList.textContent).to.include('Wash the dishes')
-  })
-})
+  it('should add an event to the form and add input to webpage', (done) => {
+    formInput.value = 'Wash the dishes';
+  
+    // Dispatch submit event
+    const event = new dom.window.document.defaultView.Event('submit', { bubbles: true, cancelable: true });
+    form.dispatchEvent(event);
+  
+    // Wait for DOM update before asserting
+    setTimeout(() => {
+      console.log('Task List:', taskList.textContent);  // Debugging
+      expect(taskList.textContent).to.include('Wash the dishes');
+      done();
+    }, 50); // Increase timeout to ensure DOM updates
+  });
+  
+});
