@@ -1,26 +1,32 @@
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const form=document.getElementById('create-task-form');
-    form.addEventListener('submit', function(e){e.preventDefault()
-        addtask()
-    })
-    function addtask() {
-        const text=document.getElementById('new-task-description');
-        const tasktext=text.value.trim();
-        
-        const li = document.createElement('li');
-        li.textContent=tasktext;
-        
-        const deletebutton=document.createElement('button');
-        deletebutton.textContent='❌';
-        deletebutton.addEventListener('click', function(){
-            li.remove();
-        })
-        li.appendChild(deletebutton)
-        const tasklist=document.getElementById('tasks');
-        tasklist.appendChild(li);
-        
-        text.value='';
-    }
-})
-;
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.getElementById('create-task-form').addEventListener('submit', function (event) {
+      event.preventDefault(); 
+      
+      const taskInput = document.getElementById('new-task-description');
+      const taskText = taskInput.value.trim(); 
+  
+      if (taskText === '') return; 
+  
+      
+      const li = document.createElement('li');
+      li.textContent = taskText;
+      li.classList.add('p-2', 'mt-2');
+  
+      
+      const removeButton = document.createElement('button');
+      removeButton.textContent = 'Remove';
+      removeButton.classList.add('p-2', 'btn', 'btn-danger','mx-5');
+  
+      
+      li.appendChild(removeButton);
+      document.getElementById('tasks').appendChild(li);
+  
+      
+      removeButton.addEventListener('click', () => li.remove());
+  
+      
+      taskInput.value = '';
+    });
+  });
